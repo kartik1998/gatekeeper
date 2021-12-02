@@ -1,0 +1,29 @@
+{
+  "name": "webhooktest",
+  "version": "1.0.0",
+  "description": "webhooktest makes it easy to write tests for webhooks in nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kartik1998/webhooktest.git"
+  },
+  "keywords": [
+    "webhooks",
+    "webhook",
+    "test",
+    "tests",
+    "ngrok",
+    "automation",
+    "mocha",
+    "chai"
+  ],
+  "author": "Kartik",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kartik1998/webhooktest/issues"
+  },
+  "homepage": "https://github.com/kartik1998/webhooktest#readme"
+}
