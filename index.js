@@ -17,7 +17,7 @@ app.use((req, res) => {
     headers: req.headers,
     query: req.query,
   };
-  const filePath = crypto.randomBytes(25).toString('hex');
+  const filePath = `/tmp/${crypto.randomBytes(25).toString('hex')}`;
   fs.writeFileSync(filePath, JSON.stringify(webhookData));
   console.log(webhookData);
   return res.send('webhook recieved');
