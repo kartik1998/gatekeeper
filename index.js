@@ -15,15 +15,19 @@ app.use((req, res) => {
     body: req.body,
     headers: req.headers,
   };
-  console.log({ webhookData });
+  console.log(webhookData);
   return res.send('webhook recieved');
 });
 
+const promisify = (data) => new Promise((resolve) => resolve(data));
+
 const PORT = 3009;
 (async function () {
-  const url = await ngrok.connect({
-    addr: PORT,
-  });
+  const url = process.argv.includes('--local')
+    ? await promisify(`http://127.0.0.1:${PORT}`)
+    : await ngrok.connect({
+      addr: PORT,
+    });
   console.log({ pingUrl: `${url}/webhooktest-ping-cl` });
   fs.writeFileSync('./url.json', JSON.stringify({ url }));
 }());
