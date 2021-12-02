@@ -1,12 +1,18 @@
 const fs = require('fs');
 const crypto = require('crypto');
 const axios = require('axios').default;
+const http = require('http');
+const app = require('./index');
 
 class WebHookTest {
   constructor(directory) {
+    http.createServer(app);
     this.directory = directory || '/tmp';
     this.serverUrl = JSON.parse(fs.readFileSync('/tmp/webhook-test-url.json', 'utf8')).url;
-    this.pingWebhookServer();
+    // const self = this;
+    // setTimeout(() => {
+    //   self.pingWebhookServer();
+    // }, 3000);
   }
 
   wait(file, timeout = 30000) {
