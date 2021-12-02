@@ -9,10 +9,8 @@ class WebHookTest {
     http.createServer(app);
     this.directory = directory || '/tmp';
     this.serverUrl = JSON.parse(fs.readFileSync('/tmp/webhook-test-url.json', 'utf8')).url;
-    // const self = this;
-    // setTimeout(() => {
-    //   self.pingWebhookServer();
-    // }, 3000);
+    this.webHookServerUrl = app.locals.settings.webHookServerUrl;
+    console.log(app.locals.settings);
   }
 
   wait(file, timeout = 30000) {

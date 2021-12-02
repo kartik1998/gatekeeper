@@ -23,19 +23,15 @@ app.use((req, res) => {
   return res.send('webhook recieved');
 });
 
-const promisify = (data) => new Promise((resolve) => resolve(data));
-
 const PORT = 3009;
-(async function () {
-  const url = process.argv.includes('--local')
-    ? await promisify(`http://127.0.0.1:${PORT}`)
-    : await ngrok.connect({
+function getWebhookServerUrl() {
+  return process.argv.includes('--local')
+    ? `http://127.0.0.1:${PORT}`
+    : ngrok.connect({
       addr: PORT,
     });
-  console.log({ pingUrl: `${url}/webhooktest-ping-cl` });
-  fs.writeFileSync('/tmp/webhook-test-url.json', JSON.stringify({ url }));
-}());
-
-app.listen(PORT, console.log(`listening on port ${PORT} \ncreating ngrok url...`));
+}
+const webHookServerUrl = getWebhookServerUrl();
+app.locals.settings.webHookServerUrl = webHookServerUrl;
 
 module.exports = app;
