@@ -2,7 +2,7 @@
   "name": "webhooktest",
   "version": "1.0.0",
   "description": "webhooktest makes it easy to write tests for webhooks in nodejs",
-  "main": "index.js",
+  "main": "webhook.js",
   "scripts": {
     "prepare": "npx husky install",
     "lint": "eslint .",
