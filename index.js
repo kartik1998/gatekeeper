@@ -6,6 +6,9 @@ const fs = require('fs');
 const app = express();
 
 app.use(express.json());
+
+app.get('/webhooktest-ping-cl', (_, res) => res.send('pong'));
+
 app.use((req, res) => {
   const webhookData = {
     method: req.method,
@@ -21,7 +24,7 @@ const PORT = 3009;
   const url = await ngrok.connect({
     addr: PORT,
   });
-  console.log(url);
+  console.log({ pingUrl: `${url}/webhooktest-ping-cl` });
   fs.writeFileSync('./url.json', JSON.stringify({ url }));
 }());
 
