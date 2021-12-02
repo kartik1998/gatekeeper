@@ -16,7 +16,7 @@ class WebHookTest {
       while (!fs.existsSync(filePath) && Date.now() - currentTime < timeout);
       // eslint-disable-next-line no-unused-expressions
       fs.existsSync(filePath)
-        ? resolve(fs.readFileSync(filePath, 'utf8'))
+        ? resolve(JSON.parse(fs.readFileSync(filePath, 'utf8')))
         : reject(new Error('failed to recieve webhook on time'));
     });
   }
