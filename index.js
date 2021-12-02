@@ -2,6 +2,7 @@
 const express = require('express');
 const ngrok = require('ngrok');
 const fs = require('fs');
+const crypto = require('crypto');
 
 const app = express();
 
@@ -14,7 +15,10 @@ app.use((req, res) => {
     method: req.method,
     body: req.body,
     headers: req.headers,
+    query: req.query,
   };
+  const filePath = crypto.randomBytes(25).toString('hex');
+  fs.writeFileSync(filePath, JSON.stringify(webhookData));
   console.log(webhookData);
   return res.send('webhook recieved');
 });
