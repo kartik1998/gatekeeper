@@ -33,7 +33,7 @@ const PORT = 3009;
       addr: PORT,
     });
   console.log({ pingUrl: `${url}/webhooktest-ping-cl` });
-  fs.writeFileSync('./url.json', JSON.stringify({ url }));
+  fs.writeFileSync('/tmp/webhook-test-url.json', JSON.stringify({ url }));
 }());
 
-app.listen(PORT, console.log(`listening on port ${PORT}`));
+app.listen(PORT, console.log(`listening on port ${PORT} \ncreating ngrok url...`));
