@@ -38,5 +38,9 @@
     "husky": "^7.0.4",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "ngrok": "^4.2.2"
   }
 }
