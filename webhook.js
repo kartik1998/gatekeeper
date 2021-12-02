@@ -10,7 +10,6 @@ class WebHookTest {
     this.directory = directory || '/tmp';
     this.serverUrl = JSON.parse(fs.readFileSync('/tmp/webhook-test-url.json', 'utf8')).url;
     this.webHookServerUrl = app.locals.settings.webHookServerUrl;
-    console.log(app.locals.settings);
   }
 
   wait(file, timeout = 30000) {
