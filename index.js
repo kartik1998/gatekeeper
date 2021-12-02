@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 const express = require('express');
 const ngrok = require('ngrok');
-const fs = require('fs');
-const crypto = require('crypto');
+const EventEmitter = require('events');
+
+const emitter = new EventEmitter();
 
 const app = express();
 
@@ -17,9 +18,7 @@ app.use((req, res) => {
     headers: req.headers,
     query: req.query,
   };
-  const filePath = `/tmp/${crypto.randomBytes(25).toString('hex')}`;
-  fs.writeFileSync(filePath, JSON.stringify(webhookData));
-  console.log(webhookData);
+  emitter.emit('fire', webhookData);
   return res.send('webhook recieved');
 });
 
@@ -34,4 +33,4 @@ function getWebhookServerUrl() {
 const webHookServerUrl = getWebhookServerUrl();
 app.locals.settings.webHookServerUrl = webHookServerUrl;
 
-module.exports = app;
+module.exports = { app, emitter };
