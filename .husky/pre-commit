@@ -1,0 +1,15 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "[$(git rev-parse --abbrev-ref HEAD)] running prettier & eslint"
+prettier --write . > /dev/null & PID1=$!
+npm run lint:fix > /dev/null & PID2=$!
+
+CODE=0
+wait $PID1 || CODE=$?
+wait $PID2 || CODE=$?
+if [[ "${CODE}" != "0" ]]; then
+    echo 'ERROR: eslint failed'
+    trap 'jobs -p | xargs kill' EXIT
+    exit 1
+fi

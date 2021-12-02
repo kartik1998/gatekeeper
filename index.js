@@ -1,1 +1,0 @@
-const date = new Date();
