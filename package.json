@@ -6,7 +6,9 @@
   "scripts": {
     "prepare": "npx husky install",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "start": "node --ignore url.json",
+    "dev": "nodemon --ignore url.json"
   },
   "repository": {
     "type": "git",
@@ -40,6 +42,7 @@
     "prettier": "^2.5.0"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "express": "^4.17.1",
     "ngrok": "^4.2.2"
   }

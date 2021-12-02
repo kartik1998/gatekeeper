@@ -1,10 +1,7 @@
 const path = require('path');
 const pkg = require('./package.json');
 
-const aliases = Object.entries(pkg._moduleAliases || {}).map((e) => [
-  e[0],
-  path.resolve(__dirname, e[1]),
-]);
+const aliases = Object.entries(pkg._moduleAliases || {}).map((e) => [e[0], path.resolve(__dirname, e[1])]);
 
 module.exports = {
   extends: 'airbnb-base',
