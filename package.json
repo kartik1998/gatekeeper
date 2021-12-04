@@ -1,7 +1,7 @@
 {
-  "name": "webhooktest",
+  "name": "@kartikkhk/gatekeeper",
   "version": "1.0.0",
-  "description": "webhooktest makes it easy to write tests for webhooks in nodejs",
+  "description": "gatekeeper makes it easy to write tests for webhooks in nodejs",
   "main": "webhook.js",
   "scripts": {
     "prepare": "npx husky install",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kartik1998/webhooktest.git"
+    "url": "git+https://github.com/kartik1998/gatekeeper.git"
   },
   "keywords": [
     "webhooks",
@@ -27,9 +27,9 @@
   "author": "Kartik",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kartik1998/webhooktest/issues"
+    "url": "https://github.com/kartik1998/gatekeeper/issues"
   },
-  "homepage": "https://github.com/kartik1998/webhooktest#readme",
+  "homepage": "https://github.com/kartik1998/gatekeeper#readme",
   "devDependencies": {
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
