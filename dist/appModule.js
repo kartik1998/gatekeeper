@@ -4,6 +4,10 @@ const ngrok = require('ngrok');
 const EventEmitter = require('events');
 const http = require('http');
 
+/**
+ * Singleton AppModule instance
+ * @param {*} opts { port?: Number, localServer?: Boolean, logWebHookToConsole?: Boolean }
+ */
 function AppModule(opts = {}) {
   if (AppModule._instance) return AppModule._instance;
   this.locals = {
@@ -20,6 +24,9 @@ function AppModule(opts = {}) {
   AppModule._instance = this;
 }
 
+/**
+ * sets up the express app instance. i.e. adds in required middlewares and routes
+ */
 AppModule.prototype.setupExpressApp = function () {
   const { app } = this.locals;
   app.use(express.json());
@@ -37,12 +44,19 @@ AppModule.prototype.setupExpressApp = function () {
   });
 };
 
+/**
+ * @returns a promise of the webhookserver url
+ */
 AppModule.prototype.getWebhookServerUrl = function () {
   const { localServer } = this.locals;
   if (localServer) return Promise.resolve(`http://127.0.0.1:${this.locals.port}`);
   return ngrok.connect({ addr: this.locals.port });
 };
 
+/**
+ * @param {*} _timeout
+ * @returns a promise when a webhook is recieved by the server
+ */
 AppModule.prototype.waitForWebHook = function (_timeout = 30000) {
   const self = this;
   return new Promise((resolve, reject) => {
