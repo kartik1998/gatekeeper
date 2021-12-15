@@ -51,14 +51,14 @@ AppModule.prototype.setupExpressApp = function () {
  * @returns a promise of the webhookserver url
  */
 AppModule.prototype.getWebhookServerUrl = function (locals) {
-  const { localServer } = locals;
-  if (localServer) return Promise.resolve(`http://127.0.0.1:${locals.port}`);
-  return ngrok.connect({ addr: locals.port });
+  const { localServer } = this.locals;
+  if (localServer) return Promise.resolve(`http://127.0.0.1:${this.locals.port}`);
+  return ngrok.connect({ addr: this.locals.port });
 };
 
 AppModule.prototype.getWebhookServerUrlSync = function () {
-  const { localServer } = this.locals;
-  return sp(this.getWebhookServerUrl)(this.locals);
+  const self = this;
+  return sp(this.getWebhookServerUrl.bind(self))();
 };
 
 /**
