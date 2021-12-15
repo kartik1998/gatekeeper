@@ -57,7 +57,7 @@ AppModule.prototype.getWebhookServerUrl = function () {
  * @param {*} _timeout
  * @returns a promise when a webhook is recieved by the server
  */
-AppModule.prototype.waitForWebHook = function (_timeout = 30000) {
+AppModule.prototype.waitForWebHook = function (_timeout = 60000) {
   const self = this;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
