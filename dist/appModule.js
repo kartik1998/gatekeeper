@@ -22,8 +22,9 @@ function AppModule(opts = {}) {
   this.setupExpressApp();
   this.locals.Server = http.createServer(this.locals.app);
   this.locals.Server.listen(this.locals.port);
-  this.url = this.getWebhookServerUrlSync();
-  console.log(`webhook server running on url: ${this.url}, port: ${this.locals.port}`);
+  this.locals.webhookUrl = this.getWebhookServerUrlSync();
+  this.locals.localUrl = `http://localhost:${this.locals.port}`;
+  console.log(`webhook server running on url: ${this.locals.webhookUrl}, port: ${this.locals.port}`);
   AppModule._instance = this;
 }
 
