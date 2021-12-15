@@ -3,7 +3,7 @@ const axios = require('axios').default;
 const http = require('http');
 const { app, emitter } = require('./index');
 
-class WebHookTest {
+class AppModule {
   constructor(directory) {
     const server = http.createServer(app);
     server.listen(3009);
@@ -29,4 +29,4 @@ class WebHookTest {
   }
 }
 
-module.exports = WebHookTest;
+module.exports = AppModule;

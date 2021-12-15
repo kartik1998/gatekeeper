@@ -1,6 +1,6 @@
-const WebhookTest = require('../webhook');
+const AppModule = require('../webhook');
 
-const web = new WebhookTest();
+const web = new AppModule();
 
 (async function () {
   const url = await web.webHookServerUrl;
