@@ -43,4 +43,16 @@ AppModule.prototype.getWebhookServerUrl = function () {
   return ngrok.connect({ addr: this.locals.port });
 };
 
+AppModule.prototype.waitForWebHook = function (_timeout = 30000) {
+  const self = this;
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      reject(new Error(`timeout of ${_timeout} ms exceeded.`));
+    }, _timeout);
+    self.locals.emitter.on('fire', (data) => {
+      resolve(data);
+    });
+  });
+};
+
 module.exports = AppModule;
