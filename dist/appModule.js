@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 // TODO: implement https://www.npmjs.com/package/synchronized-promise for module initialization
+const sp = require('synchronized-promise');
 const express = require('express');
 const ngrok = require('ngrok');
 const EventEmitter = require('events');
@@ -21,7 +22,8 @@ function AppModule(opts = {}) {
   this.setupExpressApp();
   this.locals.Server = http.createServer(this.locals.app);
   this.locals.Server.listen(this.locals.port);
-  this.getWebhookServerUrl().then((url) => console.log(`webhook server running on ${url}, port: ${this.locals.port}`));
+  this.url = this.getWebhookServerUrlSync();
+  console.log(`webhook server running on url: ${this.url}, port: ${this.locals.port}`);
   AppModule._instance = this;
 }
 
@@ -48,10 +50,15 @@ AppModule.prototype.setupExpressApp = function () {
 /**
  * @returns a promise of the webhookserver url
  */
-AppModule.prototype.getWebhookServerUrl = function () {
+AppModule.prototype.getWebhookServerUrl = function (locals) {
+  const { localServer } = locals;
+  if (localServer) return Promise.resolve(`http://127.0.0.1:${locals.port}`);
+  return ngrok.connect({ addr: locals.port });
+};
+
+AppModule.prototype.getWebhookServerUrlSync = function () {
   const { localServer } = this.locals;
-  if (localServer) return Promise.resolve(`http://127.0.0.1:${this.locals.port}`);
-  return ngrok.connect({ addr: this.locals.port });
+  return sp(this.getWebhookServerUrl)(this.locals);
 };
 
 /**
