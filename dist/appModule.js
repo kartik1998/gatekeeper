@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-// TODO: implement https://www.npmjs.com/package/synchronized-promise for module initialization
 const sp = require('synchronized-promise');
 const express = require('express');
 const ngrok = require('ngrok');
