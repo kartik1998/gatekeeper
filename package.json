@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "axios": "^0.24.0",
+    "cls-hooked": "^4.2.2",
     "express": "^4.17.1",
     "ngrok": "^4.2.2",
     "synchronized-promise": "^0.3.1"
