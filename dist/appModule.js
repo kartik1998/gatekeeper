@@ -39,7 +39,7 @@ function AppModule(opts = {}) {
     });
     const len = opts.app._router.stack.length;
     opts.app._router.stack.__gatekeeper__move__(len - 1, 1);
-  })();
+  }());
   AppModule._instance = this;
 }
 

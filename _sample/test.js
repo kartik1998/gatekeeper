@@ -10,4 +10,4 @@ console.log(web.getNgrokWebhookUrl());
   console.log({ res1 });
   const res2 = await web.waitForWebHook();
   console.log({ res2 });
-})();
+}());
