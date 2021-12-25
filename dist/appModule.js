@@ -1,12 +1,11 @@
 /* eslint-disable no-underscore-dangle */
-// TODO: add instrumentation: https://dev.to/henryjw/intercepting-http-requests-with-nodejs-21ba
 const sp = require('synchronized-promise');
 const express = require('express');
 const ngrok = require('ngrok');
 const EventEmitter = require('events');
 const http = require('http');
+const https = require('https');
 const utils = require('../lib/utils');
-const Context = require('../lib/context');
 
 /**
  * Singleton AppModule instance
@@ -14,9 +13,7 @@ const Context = require('../lib/context');
  */
 function AppModule(opts = {}) {
   if (AppModule._instance) return AppModule._instance;
-  if (!opts.app) {
-    throw new Error('AppModule requires an express "app" instance');
-  }
+  if (!opts.app) throw new Error('AppModule requires an express "app" instance');
   this.locals = {
     emitter: new EventEmitter(),
     _app: express(),
@@ -29,22 +26,25 @@ function AppModule(opts = {}) {
   this.locals.Server.listen(this.locals.port);
   this.locals.webhookUrl = this.getWebhookServerUrlSync();
   this.locals.localUrl = `http://localhost:${this.locals.port}`;
+
   console.log(`webhook server running on url: ${this.locals.webhookUrl}, port: ${this.locals.port}`);
   const self = this;
+
   (function InjectGatekeeperId() {
     Array.prototype.__gatekeeper__move__ = function (from, to) {
       this.splice(to, 0, this.splice(from, 1)[0]);
     };
-    opts.app.use((req, res, next) => {
+    opts.app.use((req, _res, next) => {
       req.gatekeeperId = utils.createId();
       self.currentGatekeeperId = req.gatekeeperId;
       return next();
     });
     const len = opts.app._router.stack.length;
     opts.app._router.stack.__gatekeeper__move__(len - 1, 1);
-  }());
-  this.requestInterceptor(require('http'));
-  this.requestInterceptor(require('https'));
+  })();
+
+  this.requestInterceptor(http);
+  this.requestInterceptor(https);
   AppModule._instance = this;
 }
 
@@ -52,7 +52,6 @@ AppModule.prototype.requestInterceptor = function (httpModule) {
   const original = httpModule.request;
   const self = this;
   httpModule.request = function (options, callback) {
-    console.log(options.href || `${options.proto}://${options.host}${options.path}`, options.method);
     if (options.headers) {
       options.headers['X-Gatekeeper-Id'] = self.currentGatekeeperId;
     }

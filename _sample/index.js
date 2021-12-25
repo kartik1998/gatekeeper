@@ -8,7 +8,7 @@ app.get('/time/:time', async (req, res) => {
   const { time } = req.params;
   setTimeout(async () => {
     await axios.post(process.env.WEBHOOK_URL, {
-      data: `response in ${time} + dt seconds`,
+      data: `webhook response in ${time} + dt seconds`,
     });
   }, time * 1002);
   setTimeout(() => {
