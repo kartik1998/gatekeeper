@@ -4,10 +4,11 @@ const app = require('./index');
 const web = new AppModule({ logWebHookToConsole: false, app });
 console.log(web.getLocalWebhookUrl());
 console.log(web.getNgrokWebhookUrl());
+process.env.WEBHOOK_URL = web.getNgrokWebhookUrl();
 
 (async function () {
   const res1 = await web.waitForWebHook();
-  console.log({ res1 });
+  console.dir({ res1 }, { depth: null });
   const res2 = await web.waitForWebHook();
-  console.log({ res2 });
+  console.dir({ res2 }, { depth: null });
 }());
