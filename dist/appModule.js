@@ -14,7 +14,7 @@ const utils = require('../lib/utils');
 function AppModule(opts = {}) {
   if (AppModule._instance) return AppModule._instance;
   if (!opts.app) {
-    throw new Error(`AppModule requires an express "app" instance`);
+    throw new Error('AppModule requires an express "app" instance');
   }
   this.locals = {
     emitter: new EventEmitter(),
@@ -39,9 +39,17 @@ function AppModule(opts = {}) {
     });
     const len = opts.app._router.stack.length;
     opts.app._router.stack.__gatekeeper__move__(len - 1, 1);
-  })();
+  }());
   AppModule._instance = this;
 }
+
+AppModule.prototype.getLocalWebhookUrl = function () {
+  return this.locals.localUrl;
+};
+
+AppModule.prototype.getNgrokWebhookUrl = function () {
+  return this.locals.webhookUrl;
+};
 
 /**
  * sets up the express _app instance. i.e. adds in required middlewares and routes
