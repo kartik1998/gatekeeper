@@ -25,8 +25,7 @@ function AppModule(opts = {}) {
   this.locals.Server = http.createServer(this.locals._app).listen(this.locals.port);
   this.locals.webhookUrl = this.getWebhookServerUrl();
   this.locals.localUrl = `http://localhost:${this.locals.port}`;
-
-  console.log(`webhook server running on url: ${this.locals.webhookUrl}, port: ${this.locals.port}`);
+  this._logNgrokServerAndPort();
   const self = this;
 
   (function InjectGatekeeperId() {
@@ -116,16 +115,21 @@ AppModule.prototype.getWebhookServerUrlSync = function () {
  * @param {*} _timeout
  * @returns a promise when a webhook is recieved by the server
  */
-AppModule.prototype.waitForWebHook = function (_timeout = 60000) {
+AppModule.prototype.waitForWebHook = function (timeout = 60000) {
   const self = this;
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-      reject(new Error(`timeout of ${_timeout} ms exceeded.`));
-    }, _timeout);
+      reject(new Error(`timeout of ${timeout} ms exceeded.`));
+    }, timeout);
     self.locals.emitter.on('fire', (data) => {
       resolve(data);
     });
   });
+};
+
+AppModule.prototype._logNgrokServerAndPort = async function () {
+  const webhookUrl = await this.locals.webhookUrl;
+  console.log(`webhook server running on url: ${webhookUrl}, port: ${this.locals.port}`);
 };
 
 module.exports = AppModule;
