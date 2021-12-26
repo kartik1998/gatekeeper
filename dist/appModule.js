@@ -23,7 +23,7 @@ function AppModule(opts = {}) {
   };
   this.setupExpressApp();
   this.locals.Server = http.createServer(this.locals._app).listen(this.locals.port);
-  this.locals.webhookUrl = this.getWebhookServerUrlSync();
+  this.locals.webhookUrl = this.getWebhookServerUrl();
   this.locals.localUrl = `http://localhost:${this.locals.port}`;
 
   console.log(`webhook server running on url: ${this.locals.webhookUrl}, port: ${this.locals.port}`);
@@ -35,12 +35,12 @@ function AppModule(opts = {}) {
     };
     opts.app.use((req, _res, next) => {
       req.gatekeeperId = utils.createId();
-      self.currentGatekeeperId = req.gatekeeperId;
+      self._setGatekeeperId(req.gatekeeperId);
       return next();
     });
     const len = opts.app._router.stack.length;
     opts.app._router.stack.__gatekeeper__move__(len - 1, 1);
-  }());
+  })();
 
   this.requestInterceptor(http);
   this.requestInterceptor(https);
@@ -52,10 +52,18 @@ AppModule.prototype.requestInterceptor = function (httpModule) {
   const self = this;
   httpModule.request = function (options, callback) {
     if (options.headers) {
-      options.headers['X-Gatekeeper-Id'] = self.currentGatekeeperId;
+      options.headers['X-Gatekeeper-Id'] = self._gatekeeperId;
     }
     return original(options, callback);
   };
+};
+
+AppModule.prototype.getGatekeeperId = function () {
+  return this._gatekeeperId;
+};
+
+AppModule.prototype._setGatekeeperId = function (id) {
+  this._gatekeeperId = id;
 };
 
 AppModule.prototype.getLocalWebhookUrl = function () {
@@ -95,6 +103,10 @@ AppModule.prototype.getWebhookServerUrl = function (locals) {
   return ngrok.connect({ addr: this.locals.port });
 };
 
+/**
+ * Breaks with mocha file loads: [Error: bound  called timeout]
+ * TODO: fix sync ngrok generation
+ */
 AppModule.prototype.getWebhookServerUrlSync = function () {
   const self = this;
   return sp(this.getWebhookServerUrl.bind(self))();
