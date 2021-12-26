@@ -22,8 +22,7 @@ function AppModule(opts = {}) {
     logWebHookToConsole: opts.logWebHookToConsole,
   };
   this.setupExpressApp();
-  this.locals.Server = http.createServer(this.locals._app);
-  this.locals.Server.listen(this.locals.port);
+  this.locals.Server = http.createServer(this.locals._app).listen(this.locals.port);
   this.locals.webhookUrl = this.getWebhookServerUrlSync();
   this.locals.localUrl = `http://localhost:${this.locals.port}`;
 
@@ -82,7 +81,7 @@ AppModule.prototype.setupExpressApp = function () {
       query: req.query,
     };
     if (this.locals.logWebHookToConsole) console.log(webhookData);
-    if (req.headers['X-gatekeeper-test'] !== 'yes') this.locals.emitter.emit('fire', webhookData);
+    this.locals.emitter.emit('fire', webhookData);
     return res.send('webhook recieved');
   });
 };
