@@ -28,7 +28,8 @@ function AppModule(opts = {}) {
   this._logNgrokServerAndPort();
   const self = this;
 
-  (function InjectGatekeeperId() {
+  const interceptRequests = opts.disableRequestInterceptor !== true;
+  if (interceptRequests) {
     Array.prototype.__gatekeeper__move__ = function (from, to) {
       this.splice(to, 0, this.splice(from, 1)[0]);
     };
@@ -39,10 +40,10 @@ function AppModule(opts = {}) {
     });
     const len = opts.app._router.stack.length;
     opts.app._router.stack.__gatekeeper__move__(len - 1, 1);
-  })();
 
-  this.requestInterceptor(http);
-  this.requestInterceptor(https);
+    this.requestInterceptor(http);
+    this.requestInterceptor(https);
+  }
   AppModule._instance = this;
 }
 
