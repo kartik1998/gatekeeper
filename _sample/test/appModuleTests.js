@@ -6,10 +6,10 @@ const app = require('../index');
 const web = new AppModule({ logWebHookToConsole: false, app });
 
 describe('AppModule _sample tests', function () {
-  before(async () => {
-    const webhookBaseUrl = await web.getNgrokWebhookUrl();
-    process.env.WEBHOOK_URL = webhookBaseUrl;
-  });
+  // before(async () => {
+  //   const webhookBaseUrl = await web.getNgrokWebhookUrl();
+  //   process.env.WEBHOOK_URL = webhookBaseUrl;
+  // });
   this.timeout(10000);
   it('returns response in time in seconds specified in params', async () => {
     const response = await request(app).get('/time/1');
