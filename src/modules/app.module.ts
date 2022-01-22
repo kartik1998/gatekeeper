@@ -6,7 +6,7 @@ import Base from './base';
 
 export default class AppModule extends Base {
     public static _instance: AppModule;
-    public webhookTestId: string = '';
+    public webhookTestId = '';
     private constructor(opts: types.Options) {
         super(opts);
         this.setupExpressApp();
