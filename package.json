@@ -1,6 +1,6 @@
 {
   "name": "@kartikkhk/gatekeeper",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "gatekeeper leverages ngrok & node's events module to capture webhooks and helps in integrating assertions for your webhooks with your integration / e2e tests",
   "main": "build/src/index.js",
   "scripts": {
