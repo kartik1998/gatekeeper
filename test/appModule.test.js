@@ -14,6 +14,10 @@ describe('AppModule tests', function () {
     process.env.WEBHOOK_URL = localUrl;
   });
 
+  after(() => {
+    process.exit();
+  });
+
   it('returns response in time in seconds specified in params (1 second) and triggers second webhook in 1.002 seconds', async () => {
     const webhookTestId = webhook.createWebhookTestId(); // create webhook test id
     // synchronous api response assertions

@@ -9,7 +9,9 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "build": "tsc -p .",
     "watch": "tsc -w -p .",
-    "test": "mocha $(find test -type f -name '*.test.js')"
+    "test": "npm run test:app && npm run test:e2e",
+    "test:app": "mocha $(find test -type f -name 'app*.test.js')",
+    "test:e2e": "mocha $(find test -type f -name 'e2e*.test.js')"
   },
   "repository": {
     "type": "git",
