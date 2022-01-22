@@ -15,6 +15,7 @@ export default abstract class Base {
     public _webhookTimeout: number = 60 * 1000;
     private _queue: Queue;
     private debug: boolean;
+    public webhookServerRunning = false;
 
     constructor(opts: types.Options) {
         if (!opts) opts = {};
@@ -64,7 +65,12 @@ export default abstract class Base {
     }
 
     public async startWebhookServer() {
+        if (this.webhookServerRunning) {
+            console.log(`webhook server already running`);
+            return;
+        }
         http.createServer(this._app).listen(this.locals.port);
+        this.webhookServerRunning = true;
         this.localUrl = Promise.resolve(`http://localhost:${this.locals.port}`);
         if (!this.locals.disableNgrok) {
             const opts = { addr: this.locals.port, ...this.locals.ngrokOpts }
