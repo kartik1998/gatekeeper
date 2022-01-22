@@ -1,6 +1,7 @@
 ## G𝕒te𝕜ee𝕡er
 
 [![Build Status](https://github.com/kartik1998/gatekeeper/actions/workflows/test.yml/badge.svg)](https://github.com/kartik1998/gatekeeper/actions/workflows/test.yml)
+![](https://img.shields.io/badge/npm-gatekeeper-orange)
 
 Capture your [webhooks](https://sendgrid.com/blog/whats-webhook) in your integration / end to end tests and write assertions for them.
 Normally to test webhooks `webhook.site` or some similar platform is used, however you can't automate and write assertions over the data recieved through these webhooks. <br/>
