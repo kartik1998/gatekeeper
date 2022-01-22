@@ -27,8 +27,4 @@ function isJSON(str: string): boolean {
   return true;
 }
 
-export {
-  uuid,
-  createId,
-  isJSON
-}
+export { uuid, createId, isJSON };
