@@ -1,5 +1,6 @@
 import express, { Application } from 'express';
 import EventEmitter from 'events';
+import http from 'http';
 import * as types from '../lib/types';
 
 export default abstract class Base {
@@ -37,6 +38,10 @@ export default abstract class Base {
       const body = this.locals.expectedResponse ? this.locals.expectedResponse.body : { msg: 'webhook recieved' };
       return res.status(status).json(body);
     });
+  }
+
+  public startWebhookServer() {
+    http.createServer(this._app).listen(this.locals.port);
   }
 
   public setExpectedResponse(body: any, status?: number) {
