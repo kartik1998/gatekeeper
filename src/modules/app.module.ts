@@ -1,4 +1,3 @@
-import { Request, Response, Application, NextFunction } from 'express';
 import * as types from '../lib/types';
 import * as utils from '../lib/utils';
 import http from 'http';
@@ -7,19 +6,17 @@ import Base from './base';
 
 export default class AppModule extends Base {
     public static _instance: AppModule;
-    public app?: Application;
     public webhookTestId: string = '';
-    private constructor(opts: types.Options, app?: Application) {
+    private constructor(opts: types.Options) {
         super(opts);
         this.setupExpressApp();
-        this.app = app;
     }
 
-    public static Instance(opts: types.Options, app?: Application): AppModule {
-        return this._instance || (this._instance = new AppModule(opts, app));
+    public static Instance(opts: types.Options): AppModule {
+        return this._instance || (this._instance = new AppModule(opts));
     }
 
-    public createWebhookTestId(): string {
+    private createWebhookTestId(): string {
         this.webhookTestId = utils.uuid();
         return this.webhookTestId;
     }
@@ -29,13 +26,6 @@ export default class AppModule extends Base {
     }
 
     public enableWebhookHeaderModification() {
-        if (!this.app) throw new Error(`Express "app" object required`);
-        const self = this;
-        this.app.use((req: any, _res: Response, next: NextFunction) => {
-            req.webhookTestId = self.getWebhookTestId();
-            return next();
-        });
-        this.app._router.stack.unshift(this.app._router.stack.pop());
         this._interceptHttpRequests(http);
         this._interceptHttpRequests(https);
     }
@@ -45,7 +35,7 @@ export default class AppModule extends Base {
         const self = this;
         httpModule.request = function (options: any, callback: any) {
             if (options.headers) {
-                options.headers['x-webhooktest-id'] = self.getWebhookTestId();
+                options.headers['x-webhooktest-id'] = self.createWebhookTestId();
             }
             return original(options, callback);
         };

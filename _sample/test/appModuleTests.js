@@ -3,7 +3,7 @@ const { expect } = require('chai');
 const { AppModule } = require('../../build/src/index');
 const app = require('../index');
 
-const instance = AppModule.Instance({ debug: true }, app);
+const instance = AppModule.Instance({ debug: true });
 instance.enableWebhookHeaderModification();
 
 describe('AppModule _sample tests', function () {
@@ -15,7 +15,6 @@ describe('AppModule _sample tests', function () {
     process.env.WEBHOOK_URL = ngrokUrl;
   });
   it('returns response in time in seconds specified in params', async () => {
-    instance.createWebhookTestId();
     const response = await request(app).get('/time/1');
     expect(response.status).to.equal(200);
     const webhookResponse = await instance.wait();
