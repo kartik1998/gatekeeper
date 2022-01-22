@@ -1,45 +1,22 @@
 const request = require('supertest');
 const { expect } = require('chai');
-const { AppModule } = require('../../index');
+const { AppModule } = require('../../build/src/index');
 const app = require('../index');
 
-const web = new AppModule({ logWebHookToConsole: false, app });
+const instance = AppModule.Instance();
 
 describe('AppModule _sample tests', function () {
-  // before(async () => {
-  //   const webhookBaseUrl = await web.getNgrokWebhookUrl();
-  //   process.env.WEBHOOK_URL = webhookBaseUrl;
-  // });
   this.timeout(10000);
+  before(async () => {
+    await instance.startWebhookServer();
+    const ngrokUrl = await instance.getNgrokUrl();
+    const localUrl = await instance.getLocalUrl();
+    process.env.WEBHOOK_URL = localUrl;
+  });
   it('returns response in time in seconds specified in params', async () => {
     const response = await request(app).get('/time/1');
     expect(response.status).to.equal(200);
-    const id = web.getGatekeeperId();
-    const webhookResponse = await web.waitForWebHook();
-    if (id !== webhookResponse.headers['x-gatekeeper-id']) {
-      // it depends on user on how to handle this case. This probably means that a webhook of
-      // a previous test has been recieved now. you can either throw an error in this case or just continue;
-      // You can also handle this by just writing an assertion like:
-      // expect(webhookResponse.headers['x-gatekeeper-id']).to.equal(id);
-    } else {
-      expect(webhookResponse.method).to.equal('POST');
-      expect(webhookResponse.body.wait).to.equal('1.002');
-    }
-  });
-
-  it('returns response in time in seconds specified in params', async () => {
-    const response = await request(app).get('/time/2');
-    expect(response.status).to.equal(200);
-    const id = web.getGatekeeperId();
-    const webhookResponse = await web.waitForWebHook();
-    if (id !== webhookResponse.headers['x-gatekeeper-id']) {
-      // it depends on user on how to handle this case. This probably means that a webhook of
-      // a previous test has been recieved now. you can either throw an error in this case or just continue;
-      // You can also handle this by just writing an assertion like:
-      // expect(webhookResponse.headers['x-gatekeeper-id']).to.equal(id);
-    } else {
-      expect(webhookResponse.method).to.equal('POST');
-      expect(webhookResponse.body.wait).to.equal('2.004');
-    }
+    const webhookResponse = await instance.wait();
+    console.log(webhookResponse);
   });
 });
