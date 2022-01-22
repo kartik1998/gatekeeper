@@ -10,6 +10,7 @@ export default class AppModule extends Base {
     private constructor(opts: types.Options) {
         super(opts);
         this.setupExpressApp();
+        this.enableWebhookHeaderModification();
     }
 
     public static Instance(opts: types.Options): AppModule {

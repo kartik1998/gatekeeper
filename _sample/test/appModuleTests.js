@@ -4,7 +4,6 @@ const { AppModule } = require('../../build/src/index');
 const app = require('../index');
 
 const instance = AppModule.Instance({ debug: true });
-instance.enableWebhookHeaderModification();
 
 describe('AppModule _sample tests', function () {
   this.timeout(100000);
