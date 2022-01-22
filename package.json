@@ -6,9 +6,7 @@
   "scripts": {
     "prepare": "npx husky install",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "start": "node --ignore url.json",
-    "dev": "nodemon --ignore url.json"
+    "lint:fix": "eslint . --fix"
   },
   "repository": {
     "type": "git",
@@ -43,11 +41,7 @@
     "prettier": "^2.5.0"
   },
   "dependencies": {
-    "@mswjs/interceptors": "^0.13.1",
-    "axios": "^0.24.0",
-    "cls-hooked": "^4.2.2",
     "express": "^4.17.1",
-    "ngrok": "^4.2.2",
-    "synchronized-promise": "^0.3.1"
+    "ngrok": "^4.2.2"
   }
 }
