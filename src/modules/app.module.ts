@@ -17,7 +17,7 @@ export default class AppModule extends Base {
         return this._instance || (this._instance = new AppModule(opts));
     }
 
-    private createWebhookTestId(): string {
+    public createWebhookTestId(): string {
         this.webhookTestId = utils.uuid();
         return this.webhookTestId;
     }
@@ -36,14 +36,14 @@ export default class AppModule extends Base {
         const self = this;
         httpModule.request = function (options: any, callback: any) {
             if (options.headers) {
-                options.headers['x-webhooktest-id'] = self.createWebhookTestId();
+                options.headers['x-webhooktest-id'] = self.getWebhookTestId();
             }
             return original(options, callback);
         };
         const originalGet = httpModule.get;
         httpModule.get = function (options: any, callback: any) {
             if (options.headers) {
-                options.headers['x-webhooktest-id'] = self.createWebhookTestId();
+                options.headers['x-webhooktest-id'] = self.getWebhookTestId();
             }
             return originalGet(options, callback);
         };
