@@ -29,7 +29,7 @@ export default class AppModule extends Base {
         return this.webhookTestId;
     }
 
-    public enableWebhookHeaderModification() {
+    private enableWebhookHeaderModification() {
         this._interceptHttpRequests(http);
         this._interceptHttpRequests(https);
     }
