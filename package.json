@@ -4,6 +4,7 @@
   "description": "gatekeeper makes it easy to write tests for webhooks in nodejs",
   "main": "webhook.js",
   "scripts": {
+    "prepublish": "npm run build",
     "prepare": "npx husky install",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix"
