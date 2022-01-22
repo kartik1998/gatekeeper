@@ -3,10 +3,10 @@ const { expect } = require('chai');
 const { AppModule } = require('../../build/src/index');
 const app = require('../index');
 
-const instance = AppModule.Instance();
+const instance = AppModule.Instance({ debug: true });
 
 describe('AppModule _sample tests', function () {
-  this.timeout(10000);
+  this.timeout(100000);
   before(async () => {
     await instance.startWebhookServer();
     const ngrokUrl = await instance.getNgrokUrl();
@@ -18,5 +18,7 @@ describe('AppModule _sample tests', function () {
     expect(response.status).to.equal(200);
     const webhookResponse = await instance.wait();
     console.log(webhookResponse);
+    const webhookResponse2 = await instance.wait();
+    console.log(webhookResponse2);
   });
 });
