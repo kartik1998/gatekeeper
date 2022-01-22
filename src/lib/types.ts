@@ -9,7 +9,7 @@ export interface Locals {
     disableNgrok: boolean;
 }
 
-export interface GateKeeperBaseOpts {
+export interface Options {
     port?: number | string;
     logWebHooksToConsole?: boolean;
     expectedResponse?: {

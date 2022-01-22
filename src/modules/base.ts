@@ -16,7 +16,7 @@ export default abstract class Base {
     private _queue: Queue;
     private debug: boolean;
 
-    constructor(opts: types.GateKeeperBaseOpts) {
+    constructor(opts: types.Options) {
         if (!opts) opts = {};
         this._emitter = new EventEmitter();
         this._app = express();
@@ -54,8 +54,8 @@ export default abstract class Base {
     }
 
     private _handleRecievedWebhook(webhookData: any) {
-        const result = this._emitter.emit('webhook', webhookData);
-        if (!result) {
+        const ack = this._emitter.emit('webhook', webhookData);
+        if (!ack) {
             if (this.debug) utils.log(`[_handleRecievedWebhook] webhook recieved but not consumed. queueing it for now`, 'INFO');
             this._queue.enqueue(webhookData);
             return;
