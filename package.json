@@ -1,6 +1,6 @@
 {
   "name": "@kartikkhk/gatekeeper",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "gatekeeper makes it easy to write tests for webhooks in nodejs",
   "main": "build/src/index.js",
   "scripts": {
