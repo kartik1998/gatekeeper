@@ -67,5 +67,5 @@ export default abstract class Base {
         return this.locals.expectedResponse;
     }
 
-    public abstract waitForWebhook(): Promise<any>;
+    // public abstract waitForWebhook(): Promise<any>;
 }
