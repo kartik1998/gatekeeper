@@ -5,6 +5,7 @@
   "main": "build/src/index.js",
   "scripts": {
     "prepare": "npx husky install",
+    "prepublishOnly": "npm run build",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "build": "tsc -p .",
