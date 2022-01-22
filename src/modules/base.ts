@@ -4,6 +4,7 @@ import EventEmitter from 'events';
 import http from 'http';
 import Queue from '../lib/queue';
 import * as types from '../lib/types';
+import * as utils from '../lib/utils';
 
 export default abstract class Base {
     private _emitter: EventEmitter;
@@ -13,6 +14,7 @@ export default abstract class Base {
     public ngrokUrl?: Promise<string>;
     public _webhookTimeout: number = 60 * 1000;
     private _queue: Queue;
+    private debug: boolean;
 
     constructor(opts: types.GateKeeperBaseOpts) {
         if (!opts) opts = {};
@@ -28,6 +30,7 @@ export default abstract class Base {
         this.locals.disableNgrok = opts.disableNgrok || false;
         this.locals.ngrokOpts = opts.ngrokOpts || {};
         this._queue = new Queue();
+        this.debug = opts.debug || false;
     }
 
     public setupExpressApp() {
@@ -42,6 +45,7 @@ export default abstract class Base {
                 query: req.query,
             };
             if (this.locals.logWebHooksToConsole) console.log(webhookData);
+            if (this.debug) utils.log(`webhook recieved: ${JSON.stringify(webhookData)}`)
             self._handleRecievedWebhook(webhookData);
             const status = this.locals.expectedResponse ? this.locals.expectedResponse.status : 200;
             const body = this.locals.expectedResponse ? this.locals.expectedResponse.body : { msg: 'webhook recieved' };
@@ -52,8 +56,11 @@ export default abstract class Base {
     private _handleRecievedWebhook(webhookData: any) {
         const result = this._emitter.emit('webhook', webhookData);
         if (!result) {
+            if (this.debug) utils.log(`[_handleRecievedWebhook] webhook recieved but not consumed. queueing it for now`, 'INFO');
             this._queue.enqueue(webhookData);
+            return;
         }
+        if (this.debug) utils.log(`[_handleRecievedWebhook] webhook recieved and consumed by emitter`, 'INFO')
     }
 
     public async startWebhookServer() {
@@ -84,12 +91,17 @@ export default abstract class Base {
         const _timeout = timeout || this._webhookTimeout;
         const queue = this._queue;
         const emitter = this._emitter;
+        const debug = this.debug;
         return new Promise((resolve, reject) => {
             setTimeout(() => {
                 reject(`timeout of ${_timeout} execeeded`)
             }, _timeout);
-            if (!queue.isEmpty()) return resolve(queue.dequeue());
+            if (!queue.isEmpty()) {
+                if (debug) utils.log(`[wait] webhook consumed via queue`, 'INFO')
+                return resolve(queue.dequeue());
+            }
             emitter.on('webhook', (data) => {
+                if (debug) utils.log(`[wait] webhook consumed via emitter`, 'INFO')
                 resolve(data);
             })
         })

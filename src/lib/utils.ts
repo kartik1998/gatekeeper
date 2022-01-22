@@ -27,4 +27,10 @@ function isJSON(str: string): boolean {
   return true;
 }
 
-export { uuid, createId, isJSON };
+function log(message: any, level?: string) {
+  let text = message;
+  if (isJSON(message)) text = JSON.stringify(message);
+  console.log(`[${level || 'DEBUG'}] ${message}`);
+}
+
+export { uuid, createId, isJSON, log };

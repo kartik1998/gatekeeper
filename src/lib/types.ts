@@ -18,4 +18,5 @@ export interface GateKeeperBaseOpts {
     };
     ngrokOpts?: any;
     disableNgrok?: boolean;
+    debug?: boolean;
 }
