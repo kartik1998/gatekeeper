@@ -2,17 +2,20 @@ import express, { Application } from 'express';
 import ngrok from 'ngrok';
 import EventEmitter from 'events';
 import http from 'http';
+import Queue from '../lib/queue';
 import * as types from '../lib/types';
 
 export default abstract class Base {
-    public emitter: EventEmitter;
+    private _emitter: EventEmitter;
     public _app: Application;
     public locals!: Partial<types.Locals>;
     public localUrl?: Promise<string>;
     public ngrokUrl?: Promise<string>;
+    public _webhookTimeout: number = 60 * 1000;
+    private _queue: Queue;
 
     constructor(opts: types.GateKeeperBaseOpts) {
-        this.emitter = new EventEmitter();
+        this._emitter = new EventEmitter();
         this._app = express();
         this.locals.port = opts.port || 3009;
         this.locals.logWebHooksToConsole = opts.logWebHooksToConsole || false;
@@ -23,10 +26,12 @@ export default abstract class Base {
         };
         this.locals.disableNgrok = opts.disableNgrok || false;
         this.locals.ngrokOpts = opts.ngrokOpts || {};
+        this._queue = new Queue();
     }
 
     public setupExpressApp() {
         const _app = this._app;
+        const handleWebhook = this._handleRecievedWebhook;
         _app.use(express.json());
         _app.use((req, res) => {
             const webhookData = {
@@ -36,11 +41,18 @@ export default abstract class Base {
                 query: req.query,
             };
             if (this.locals.logWebHooksToConsole) console.log(webhookData);
-            this.emitter.emit('fire', webhookData);
+            handleWebhook(webhookData);
             const status = this.locals.expectedResponse ? this.locals.expectedResponse.status : 200;
             const body = this.locals.expectedResponse ? this.locals.expectedResponse.body : { msg: 'webhook recieved' };
             return res.status(status || 200).json(body);
         });
+    }
+
+    private _handleRecievedWebhook(webhookData: any) {
+        const result = this._emitter.emit('webhook', webhookData);
+        if (!result) {
+            this._queue.enqueue(webhookData);
+        }
     }
 
     public async startWebhookServer() {
@@ -67,5 +79,18 @@ export default abstract class Base {
         return this.locals.expectedResponse;
     }
 
-    // public abstract waitForWebhook(): Promise<any>;
+    public wait(timeout?: number) {
+        const _timeout = timeout || this._webhookTimeout;
+        const queue = this._queue;
+        const emitter = this._emitter;
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                reject(`timeout of ${_timeout} execeeded`)
+            }, _timeout);
+            if (!queue.isEmpty()) return resolve(queue.dequeue());
+            emitter.on('webhook', (data) => {
+                resolve(data);
+            })
+        })
+    }
 }
