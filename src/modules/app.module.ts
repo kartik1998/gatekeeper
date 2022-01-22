@@ -35,14 +35,14 @@ export default class AppModule extends Base {
         const original = httpModule.request;
         const self = this;
         httpModule.request = function (options: any, callback: any) {
-            if (options.headers) {
+            if (options.headers && self.getWebhookTestId()) {
                 options.headers['x-webhooktest-id'] = self.getWebhookTestId();
             }
             return original(options, callback);
         };
         const originalGet = httpModule.get;
         httpModule.get = function (options: any, callback: any) {
-            if (options.headers) {
+            if (options.headers && self.getWebhookTestId()) {
                 options.headers['x-webhooktest-id'] = self.getWebhookTestId();
             }
             return originalGet(options, callback);
