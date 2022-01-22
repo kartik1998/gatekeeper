@@ -8,13 +8,14 @@ import * as types from '../lib/types';
 export default abstract class Base {
     private _emitter: EventEmitter;
     public _app: Application;
-    public locals!: Partial<types.Locals>;
+    public locals: Partial<types.Locals> = {};
     public localUrl?: Promise<string>;
     public ngrokUrl?: Promise<string>;
     public _webhookTimeout: number = 60 * 1000;
     private _queue: Queue;
 
     constructor(opts: types.GateKeeperBaseOpts) {
+        if (!opts) opts = {};
         this._emitter = new EventEmitter();
         this._app = express();
         this.locals.port = opts.port || 3009;
@@ -31,7 +32,7 @@ export default abstract class Base {
 
     public setupExpressApp() {
         const _app = this._app;
-        const handleWebhook = this._handleRecievedWebhook;
+        const self = this;
         _app.use(express.json());
         _app.use((req, res) => {
             const webhookData = {
@@ -41,7 +42,7 @@ export default abstract class Base {
                 query: req.query,
             };
             if (this.locals.logWebHooksToConsole) console.log(webhookData);
-            handleWebhook(webhookData);
+            self._handleRecievedWebhook(webhookData);
             const status = this.locals.expectedResponse ? this.locals.expectedResponse.status : 200;
             const body = this.locals.expectedResponse ? this.locals.expectedResponse.body : { msg: 'webhook recieved' };
             return res.status(status || 200).json(body);
@@ -92,5 +93,13 @@ export default abstract class Base {
                 resolve(data);
             })
         })
+    }
+
+    public getLocalUrl() {
+        return this.localUrl;
+    }
+
+    public getNgrokUrl() {
+        return this.ngrokUrl;
     }
 }

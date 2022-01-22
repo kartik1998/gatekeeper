@@ -6,7 +6,6 @@ export default class AppModule extends Base {
     private constructor(opts: types.GateKeeperBaseOpts) {
         super(opts);
         this.setupExpressApp();
-        this.startWebhookServer();
     }
 
     public static Instance(opts: types.GateKeeperBaseOpts) {
