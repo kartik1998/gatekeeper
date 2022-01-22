@@ -100,7 +100,7 @@ export default abstract class Base {
                 if (debug) utils.log(`[wait] webhook consumed via queue`, 'INFO')
                 return resolve(queue.dequeue());
             }
-            emitter.on('webhook', (data) => {
+            emitter.once('webhook', (data) => {
                 if (debug) utils.log(`[wait] webhook consumed via emitter`, 'INFO')
                 resolve(data);
             })
