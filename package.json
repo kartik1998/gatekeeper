@@ -2,12 +2,13 @@
   "name": "@kartikkhk/gatekeeper",
   "version": "1.0.0",
   "description": "gatekeeper makes it easy to write tests for webhooks in nodejs",
-  "main": "webhook.js",
+  "main": "build/src/index.js",
   "scripts": {
-    "prepublish": "npm run build",
     "prepare": "npx husky install",
     "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix"
+    "lint:fix": "eslint . --ext .ts --fix",
+    "build": "tsc -p .",
+    "watch": "tsc -w -p ."
   },
   "repository": {
     "type": "git",
