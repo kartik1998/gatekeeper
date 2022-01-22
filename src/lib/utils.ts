@@ -1,3 +1,6 @@
+/**
+ * @returns a uuid string
+ */
 function uuid(): string {
   let d = new Date().getTime();
   let d2 = (typeof performance !== 'undefined' && performance.now && performance.now() * 1000) || 0;
@@ -14,10 +17,10 @@ function uuid(): string {
   });
 }
 
-function createId(): string {
-  return `${Date.now()}-${uuid()}`;
-}
-
+/**
+ * checks if a string is a valid json
+ * @param str 
+ */
 function isJSON(str: string): boolean {
   try {
     JSON.parse(str);
@@ -27,10 +30,14 @@ function isJSON(str: string): boolean {
   return true;
 }
 
+/**
+ * @param message 
+ * @param level 
+ */
 function log(message: any, level?: string) {
   let text = message;
   if (isJSON(message)) text = JSON.stringify(message);
   console.log(`[${level || 'DEBUG'}] ${message}`);
 }
 
-export { uuid, createId, isJSON, log };
+export { uuid, isJSON, log };

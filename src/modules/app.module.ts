@@ -4,6 +4,9 @@ import http from 'http';
 import https from 'https';
 import Base from './base';
 
+/**
+ * @AppModule is a singleton class for appModule tests, it also supports intercepting webhook requests to maintain the context of tests with webhooks
+ */
 export default class AppModule extends Base {
     public static _instance: AppModule;
     public webhookTestId = '';
@@ -31,6 +34,11 @@ export default class AppModule extends Base {
         this._interceptHttpRequests(https);
     }
 
+    /**
+     * appends a x-webhooktest-id to the headers if instance.createWebhookTestId is called.
+     * useful in managing test context
+     * @param httpModule 
+     */
     private _interceptHttpRequests(httpModule: any) {
         const original = httpModule.request;
         const self = this;

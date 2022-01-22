@@ -5,7 +5,9 @@ import http from 'http';
 import Queue from '../lib/queue';
 import * as types from '../lib/types';
 import * as utils from '../lib/utils';
-
+/**
+ * @base class for app and e2e module
+ */
 export default abstract class Base {
     private _emitter: EventEmitter;
     public _app: Application;
@@ -33,7 +35,9 @@ export default abstract class Base {
         this._queue = new Queue();
         this.debug = opts.debug || false;
     }
-
+    /**
+     * constructs the webhook server based on input options and is responsible for handling the webhook in tests
+     */
     public setupExpressApp() {
         const _app = this._app;
         const self = this;
@@ -54,6 +58,11 @@ export default abstract class Base {
         });
     }
 
+    /**
+     * If there is a listener on 'webhook' event then the webhook data is directly emitter, else 
+     * it's queued to be consumed later
+     * @param webhookData 
+     */
     private _handleRecievedWebhook(webhookData: any) {
         const ack = this._emitter.emit('webhook', webhookData);
         if (!ack) {
@@ -64,6 +73,9 @@ export default abstract class Base {
         if (this.debug) utils.log(`[_handleRecievedWebhook] webhook recieved and consumed by emitter`, 'INFO')
     }
 
+    /**
+     * @description starts the webhook server and ngrok tunnel with given options
+     */
     public async startWebhookServer() {
         if (this.webhookServerRunning) {
             console.log(`webhook server already running`);
@@ -81,6 +93,11 @@ export default abstract class Base {
         }
     }
 
+    /**
+     * @description can be used to edit response that you want your webhook server to give
+     * @param body 
+     * @param status 
+     */
     public setExpectedResponse(body: any, status?: number) {
         const _expectedResponse = {
             status: status || 200,
@@ -93,6 +110,11 @@ export default abstract class Base {
         return this.locals.expectedResponse;
     }
 
+    /**
+     * @description if there is a webhook in the queue then it is returned else we wait for the 'webhook' event
+     * @param timeout if timeout is exceeded then a timeout rejection is thrown
+     * @returns webhooks recieved
+     */
     public wait(timeout?: number) {
         const _timeout = timeout || this._webhookTimeout;
         const queue = this._queue;
