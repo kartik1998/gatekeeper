@@ -39,5 +39,12 @@ export default class AppModule extends Base {
             }
             return original(options, callback);
         };
+        const originalGet = httpModule.get;
+        httpModule.get = function (options: any, callback: any) {
+            if (options.headers) {
+                options.headers['x-webhooktest-id'] = self.createWebhookTestId();
+            }
+            return originalGet(options, callback);
+        };
     }
 }
