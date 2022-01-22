@@ -14,7 +14,7 @@ describe('AppModule tests', function () {
     process.env.WEBHOOK_URL = localUrl;
   });
 
-  it('returns response in time in seconds specified in params (1 second)', async () => {
+  it('returns response in time in seconds specified in params (1 second) and triggers second webhook in 1.002 seconds', async () => {
     const webhookTestId = webhook.createWebhookTestId(); // create webhook test id
     // synchronous api response assertions
     const response = await request(app).get('/time/1');
@@ -32,7 +32,7 @@ describe('AppModule tests', function () {
     expect(webhookResponse2.headers['x-webhooktest-id']).to.equal(webhookTestId);
   });
 
-  it('returns response in time in seconds specified in params (3 seconds)', async () => {
+  it('returns response in time in seconds specified in params (3 seconds) and triggers webhook second webhook in 3.006 seconds', async () => {
     const webhookTestId = webhook.createWebhookTestId(); // create webhook test id
     // synchronous api response assertions
     const response = await request(app).get('/time/3');
