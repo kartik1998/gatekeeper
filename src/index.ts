@@ -1,3 +1,3 @@
-import InterceptorModule from './modules/intercept.module';
+import AppModule from './modules/app.module';
 
-export { InterceptorModule };
+export { AppModule } 
