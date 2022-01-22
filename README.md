@@ -14,6 +14,7 @@ Gatekeeper solves this problem via node's event emitter module and makes writing
 #### Usage
 
 - sample implementation: [link](https://github.com/kartik1998/gatekeeper/blob/master/test/appModule.test.js)
+- Please note that `AppModule` is `singleton` in nature and the webhook's base url has to be updated by the user. <i> refer sample below </i>
 
 ```js
 const webhook = AppModule.Instance(); // webhook server by default runs on port 3009 (this is configurable, configurations listed below)
@@ -23,7 +24,7 @@ describe('user integration tests', function () {
   before(async () => {
     await webhook.startWebhookServer();
     const localUrl = await webhook.getLocalUrl();
-    process.env.WEBHOOK_URL = localUrl;
+    process.env.WEBHOOK_URL = localUrl; // or whatever your key for webhook url is like process.env.WEBHOOK_BASE_URL
   });
 
   it('user test description', async () => {
@@ -33,14 +34,15 @@ describe('user integration tests', function () {
     // synchronous api response assertions
 
     // assertions for webhooks recieved
-    const webhookResponse = await webhook.wait();
+    const webhookResponse = await webhook.wait(); // default timeout of 1 minute
+    /* can also be used like await webhook.wait(60 * 2000) //timeout of 2 minutes */
     expect(webhookResponse.body).to.deep.equal(<what you expect webhook body to be>);
     expect(webhookResponse.headers).to.deep.equal(<what you expect webhook headers to be>);
   });
 });
 ```
 
-- Sample webhook.wait() result:
+- Sample `webhook.wait()` result:
 
 ```json
 {
@@ -51,6 +53,28 @@ describe('user integration tests', function () {
   "headers": {
     "Content-Type": "application/json"
   },
-  "query": {}
+  "query": {},
+  "originalUrl": "/webhook/xyz"
 }
 ```
+
+#### AppModule Configuration
+
+- Sample usage:
+
+```js
+const webhook = AppModule.Instance({ port: 5002, logWebhooksToConsole: true, disableNgrok: true... });
+```
+
+| Option               | Type                                                                                      | Description                                                                 |
+| -------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| port                 | number (default=3009)                                                                     | port on which webhook server runs on                                        |
+| logWebhooksToConsole | boolean (default=false)                                                                   | Logs all recieved webhooks to console                                       |
+| expectedResponse     | { status: number, body: any } (default= {status: 200, body: { msg: 'webhook recieved' }}) | The response that you want your webhook server to give your application     |
+| disableNgrok         | boolean (default=false)                                                                   | Disables ngrok url creation for webhook server                              |
+| ngrokOpts            | [view options here](https://www.npmjs.com/package/ngrok) (default={ addr: port })         | ngrok options                                                               |
+| debug                | boolean (default=false)                                                                   | Writes gatekeeper debug and info logs to console (use only while debugging) |
+
+| Method              | Description                                                                                                                                                                                                                                                                                             |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| createWebhookTestId | creates a unique uuid and attaches it to recieving webhooks headers. It's useful because it's possible that a `webhook.wait()`s timeout can exceed and the webhook is then recieved in the next test. Sample usage: [link](https://github.com/kartik1998/gatekeeper/blob/master/test/appModule.test.js) |
