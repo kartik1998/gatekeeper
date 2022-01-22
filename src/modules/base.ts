@@ -11,11 +11,11 @@ export default abstract class Base {
     public localUrl?: Promise<string>;
     public ngrokUrl?: Promise<string>;
 
-    constructor(opts: any) {
+    constructor(opts: types.GateKeeperBaseOpts) {
         this.emitter = new EventEmitter();
         this._app = express();
         this.locals.port = opts.port || 3009;
-        this.locals.logWebHooksToConsole = opts.logWebhooksToConsole || false;
+        this.locals.logWebHooksToConsole = opts.logWebHooksToConsole || false;
         if (!opts.expectedResponse) opts.expectedResponse = {};
         this.locals.expectedResponse = {
             status: opts.expectedResponse.status || 200,
@@ -39,7 +39,7 @@ export default abstract class Base {
             this.emitter.emit('fire', webhookData);
             const status = this.locals.expectedResponse ? this.locals.expectedResponse.status : 200;
             const body = this.locals.expectedResponse ? this.locals.expectedResponse.body : { msg: 'webhook recieved' };
-            return res.status(status).json(body);
+            return res.status(status || 200).json(body);
         });
     }
 
