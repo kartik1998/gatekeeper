@@ -48,6 +48,7 @@ export default abstract class Base {
                 body: req.body,
                 headers: req.headers,
                 query: req.query,
+                originalUrl: req.originalUrl
             };
             if (this.locals.logWebHooksToConsole) console.log(webhookData);
             if (this.debug) utils.log(`webhook recieved: ${JSON.stringify(webhookData)}`)
