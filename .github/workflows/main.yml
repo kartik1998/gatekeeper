@@ -1,0 +1,11 @@
+name: eslint-check
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install node_modules
+        run: npm install
+      - name: Run eslint check
+        run: npm run lint
