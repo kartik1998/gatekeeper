@@ -8,6 +8,12 @@ Normally to test webhooks `webhook.site` or some similar platform is used, howev
 P.S postman also offers a solution [link](https://learning.postman.com/docs/running-collections/collection-webhooks/) but I found the workflow a little time consuming.
 Gatekeeper solves this problem via node's event emitter module and makes writing tests for webhooks seamless. [Sample gatekeeper webhook tests with chai, mocha and supertest](https://github.com/kartik1998/gatekeeper/blob/master/test/appModule.test.js)
 
+## Installation
+
+```
+npm install @kartikkhk/gatekeeper
+```
+
 ## AppModule
 
 - If you're writing your integration tests with (chai, mocha, supertest etc..) then you just need to import AppModule, `start the webhook server` and `wait` for webhooks via AppModules utility methods
@@ -18,6 +24,7 @@ Gatekeeper solves this problem via node's event emitter module and makes writing
 - Please note that `AppModule` is `singleton` in nature and the webhook's base url has to be updated by the user. <i> refer sample below </i>
 
 ```js
+const { AppModule } = require('@kartikkhk/gatekeeper');
 const webhook = AppModule.Instance(); // webhook server by default runs on port 3009 (this is configurable, configurations listed below)
 
 describe('user integration tests', function () {
@@ -99,6 +106,7 @@ const webhook = AppModule.Instance({ port: 5002, logWebhooksToConsole: true, dis
 - Please note that `E2EModule` is `singleton` in nature and the webhook's base url has to be updated by the user. (This means you might have to ssh into your external server and replace your webhook url with the ngrok url. If you're sending the webhook url in your requests then you can ignore this step) <i> refer sample below </i>
 
 ```js
+const { E2EModule } = require('@kartikkhk/gatekeeper');
 const webhook = E2EModule.Instance();
 describe('E2EModule user tests', function () {
   this.timeout(100000);
