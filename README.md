@@ -161,3 +161,9 @@ const webhook = E2EModule.Instance({ port: 5002, logWebhooksToConsole: true, dis
 | wait                | Each recieved webhook is queued (if it isn't collected from `wait` method). i.e. when a webhook is recieved an event is emitted and if that event isn't consumed then the webhook is queued. Hence when the `wait` method is called it either collects webhook data from a queue or waits for a webhook event to fire. Hence each webhook is processed serially |
 | getLocalUrl         | gets the webhook server's local url eg. `http://localhost:3009`                                                                                                                                                                                                                                                                                                 |
 | getNgrokUrl         | gets the webhook server's ngrok url eg. `http://a985-122-161-75-46.ngrok.io`                                                                                                                                                                                                                                                                                    |
+
+## Gatekeeper Workflow
+
+<p align = "center">
+<img src="https://raw.githubusercontent.com/kartik1998/gatekeeper/master/assets/gatekeeper.png" alt="gatekeeper workflow"/>
+</p>
