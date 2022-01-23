@@ -167,3 +167,7 @@ const webhook = E2EModule.Instance({ port: 5002, logWebhooksToConsole: true, dis
 <p align = "center">
 <img src="https://raw.githubusercontent.com/kartik1998/gatekeeper/master/assets/gatekeeper.png" alt="gatekeeper workflow"/>
 </p>
+
+## LICENSE
+
+<b>[MIT](https://github.com/kartik1998/gatekeeper/blob/master/LICENSE)</b>
